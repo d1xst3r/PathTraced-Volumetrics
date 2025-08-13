@@ -5,8 +5,8 @@ uniform sampler2D noise;
 uniform vec2 worldExt;
 uniform float rayCount;
 
-#define SRGB(c) vec4(pow(c.rgb, vec3(2.2)), c.a)
-#define LINEAR(c) vec4(pow(c.rgb, vec3(1.0 / 2.2)), 1.0)
+#define LINEAR(c) vec4(pow(c.rgb, vec3(2.2)), c.a)
+#define SRGB(c) vec4(pow(c.rgb, vec3(1.0 / 2.2)), 1.0)
 #define RADIANS(n) ((n) * 6.283185)
 
 vec4 trace(vec2 rxy, vec2 dxy, vec2 adxy) {
@@ -30,9 +30,9 @@ void main() {
 		float theta = RADIANS((i + bluenoise) / rayCount);
 		vec2 delta = vec2(cos(theta), -sin(theta)) * length(worldExt);
 		vec2 origin = in_TexelCoord * worldExt;
-		gl_FragColor += SRGB(trace(origin, delta, abs(delta)));
+		gl_FragColor += LINEAR(trace(origin, delta, abs(delta)));
 	}
-	gl_FragColor = LINEAR(vec4(gl_FragColor / rayCount));
+	gl_FragColor = SRGB(vec4(gl_FragColor / rayCount));
 }
 
 /*
