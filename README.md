@@ -13,8 +13,8 @@ uniform sampler2D emissivity, absorption, noise;
 uniform vec2 worldExt;
 uniform float rayCount;
 
-#define SRGB(c) vec4(pow(c.rgb, vec3(2.2)), c.a)
-#define LINEAR(c) vec4(pow(c.rgb, vec3(1.0 / 2.2)), 1.0)
+#define LINEAR(c) vec4(pow(c.rgb, vec3(2.2)), c.a)
+#define SRGB(c) vec4(pow(c.rgb, vec3(1.0 / 2.2)), 1.0)
 #define RADIANS(n) ((n) * 6.283185)
 
 vec4 trace(vec2 rxy, vec2 dxy, vec2 adxy) {
@@ -24,9 +24,9 @@ vec4 trace(vec2 rxy, vec2 dxy, vec2 adxy) {
 	for(float ii = 0.0; ii < max(worldExt.x, worldExt.y); ii += stepSize) {
 		vec2 ray = (rxy + (delta * ii)) / worldExt;
 		if (floor(ray) != vec2(0.0)) break;
-    vec3 emiss = texture2D(emissivity, ray).rgb;
+        vec3 emiss = texture2D(emissivity, ray).rgb;
 		vec3 absrp = texture2D(absorption, ray).rgb;
-    radiance += transmit * emiss * stepSize;
+        radiance += transmit * emiss * stepSize;
 		transmit *= exp(-absrp * stepSize);
 	}
 	return vec4(radiance, 1.0);
@@ -43,7 +43,7 @@ void main() {
 	gl_FragColor = LINEAR(vec4(gl_FragColor / rayCount));
 }
 ```
-The path-tracer doesn't do actual monte-carlo temporal filtering--because whatever--it just casts uniformly-spaced noisely offset rays and converts the final output from LINEAR -> SRGB -> LINEAR (because we want to operate in SRGB color-space, then output to GameMaker's linear swapchain/window).
+The path-tracer doesn't do actual monte-carlo temporal filtering--because whatever--it just casts uniformly-spaced noisely offset rays and converts the final output from SRGB -> LINEAR -> SRGB. The rendered output is done in SRGB, whereas for rendering we want to operate in linear color space (as the rendering equation is linear), so a conversion to linear and back is required.
 
 The raymarch function allws adjusting the stepSize either for performance (assuming some minimum size object), but consequently produces skipping artifacts.
 
