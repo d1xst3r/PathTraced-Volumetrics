@@ -6,7 +6,7 @@ The renderer can be tweaked by the `render_size` (square) for the resolution and
   <video src="https://github.com/user-attachments/assets/1f847138-ddd3-4d24-9751-b897a35f431d" width="400" />
 </div>
 
-The full shader in GLSL 1.0 is ass follows:
+The full shader in GLSL 1.0 is as follows:
 ```glsl
 varying vec2 in_TexelCoord;
 uniform sampler2D emissivity, absorption, noise;
