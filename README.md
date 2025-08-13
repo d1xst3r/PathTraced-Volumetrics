@@ -38,9 +38,9 @@ void main() {
 		float theta = RADIANS((i + bluenoise) / rayCount);
 		vec2 delta = vec2(cos(theta), -sin(theta)) * length(worldExt);
 		vec2 origin = in_TexelCoord * worldExt;
-		gl_FragColor += SRGB(trace(origin, delta, abs(delta)));
+		gl_FragColor += LINEAR(trace(origin, delta, abs(delta)));
 	}
-	gl_FragColor = LINEAR(vec4(gl_FragColor / rayCount));
+	gl_FragColor = SRGB(vec4(gl_FragColor / rayCount));
 }
 ```
 The path-tracer doesn't do actual monte-carlo temporal filtering--because whatever--it just casts uniformly-spaced noisely offset rays and converts the final output from SRGB -> LINEAR -> SRGB. The rendered output is done in SRGB, whereas for rendering we want to operate in linear color space (as the rendering equation is linear), so a conversion to linear and back is required.
